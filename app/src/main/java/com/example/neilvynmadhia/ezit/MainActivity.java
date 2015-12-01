@@ -1,5 +1,6 @@
 package com.example.neilvynmadhia.ezit;
 
+<<<<<<< Updated upstream
 import android.content.ContentResolver;
 import android.database.Cursor;
 import android.os.Bundle;
@@ -21,10 +22,21 @@ import android.provider.ContactsContract.Contacts;
 
 >>>>>>> Stashed changes
 public class MainActivity extends AppCompatActivity {
+=======
+import android.app.Activity;
+import android.content.Intent;
+import android.os.Bundle;
+import android.view.View;
+
+
+public class MainActivity extends Activity {
+
+>>>>>>> Stashed changes
 
     @Override
-    public void onCreate(Bundle savedInstanceState) {
+    protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+<<<<<<< Updated upstream
 <<<<<<< Updated upstream
         FacebookSdk.sdkInitialize(getApplicationContext());
         // Initialize the SDK before executing any other operations,
@@ -97,3 +109,13 @@ public class MainActivity extends AppCompatActivity {
     }
 }
 
+=======
+        setContentView(R.layout.activity_main);
+    }
+
+    public void addEvent(View view) {
+        Intent intent = new Intent(this, AddEventActivity.class);
+        startActivity(intent);
+    }
+}
+>>>>>>> Stashed changes
