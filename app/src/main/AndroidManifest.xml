@@ -33,6 +33,15 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.example.neilvyn.ezitclean.MainActivity" />
         </activity>
+        <activity
+            android:name=".DisplayEzitActivity"
+            android:label="@string/title_activity_display_ezit"
+            android:parentActivityName=".MainActivity"
+            android:theme="@style/AppTheme.NoActionBar">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.example.neilvyn.ezitclean.MainActivity" />
+        </activity>
     </application>
 
 </manifest>

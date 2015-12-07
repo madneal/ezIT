@@ -18,6 +18,7 @@ import android.app.TimePickerDialog;
 import android.app.TimePickerDialog.OnTimeSetListener;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.support.design.widget.FloatingActionButton;
 import android.text.InputType;
 import android.view.Menu;
 import android.view.View;
@@ -35,10 +36,10 @@ public class EzitActivity extends ListActivity implements OnClickListener {
     public static final String user = "fip";
     public static final String pw = "fip";
     //UI References
-    private EditText eventDate;
-    private EditText eventTime;
-    private EditText eventEndDate;
-    private EditText eventEndTime;
+    public EditText eventDate;
+    public EditText eventTime;
+    public EditText eventEndDate;
+    public EditText eventEndTime;
 
     private DatePickerDialog eventDatePickerDialog;
     private TimePickerDialog eventTimePickerDialog;
@@ -47,7 +48,10 @@ public class EzitActivity extends ListActivity implements OnClickListener {
 
     private SimpleDateFormat dateFormatter;
     private SimpleDateFormat timeFormatter;
-
+    public String name;
+    public String desc;
+    public String date;
+    public String enddate;
     /** Items entered by the user is stored in this ArrayList variable */
     ArrayList<String> list = new ArrayList<>();
 
@@ -59,22 +63,14 @@ public class EzitActivity extends ListActivity implements OnClickListener {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_ezit);
 
-        dateFormatter = new SimpleDateFormat("dd-MM-yyyy", Locale.US);
-        timeFormatter = new SimpleDateFormat("HH:mm", Locale.US);
+        dateFormatter = new SimpleDateFormat("yyyy-MM-dd", Locale.US);
+        timeFormatter = new SimpleDateFormat("HH:mm:ss", Locale.US);
         findViewsById();
 
         setDateTimeField();
 
-        /** Setting a custom layout for the list activity */
-        //setContentView(R.layout.activity_ezit);
-
-        /** Reference to the button of the layout main.xml */
         Button btn = (Button) findViewById(R.id.btnAdd);
-
-        /** Defining the ArrayAdapter to set items to ListView */
         adapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, list);
-
-        /** Defining a click event listener for the button "Add" */
         OnClickListener listener = new OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -82,18 +78,25 @@ public class EzitActivity extends ListActivity implements OnClickListener {
                 list.add(edit.getText().toString());
                 edit.setText("");
                 adapter.notifyDataSetChanged();
-
-
             }
         };
-
-        /** Setting the event listener for the add button */
         btn.setOnClickListener(listener);
-        /*Date d = new Date();
-        SimpleDateFormat f = new SimpleDateFormat("dd-MM-yyyy HH:mm");
-        if (f)*/
-        /** Setting the adapter to the ListView */
         setListAdapter(adapter);
+
+        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
+        OnClickListener listener2 = new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                EditText nametemp = (EditText) findViewById(R.id.event_name);
+                name = nametemp.getText().toString();
+                EditText desctemp = (EditText) findViewById(R.id.event_description);
+                desc = desctemp.getText().toString();
+                date = eventDate.getText().toString() +" "+ eventTime.getText().toString();
+                enddate = eventEndDate.getText().toString() +" "+ eventEndTime.getText().toString();
+                new addNewEzit().execute();
+            }
+        };
+        fab.setOnClickListener(listener2);
     }
 
     private void findViewsById() {
@@ -112,6 +115,7 @@ public class EzitActivity extends ListActivity implements OnClickListener {
         eventEndTime = (EditText) findViewById(R.id.event_endtime);
         eventEndTime.setInputType(InputType.TYPE_NULL);
         eventEndTime.requestFocus();
+
     }
 
     private void setDateTimeField() {
@@ -178,7 +182,7 @@ public class EzitActivity extends ListActivity implements OnClickListener {
         }
     }
 
-    private class addEzit extends AsyncTask<Void, Void, Void> {
+    public class addNewEzit extends AsyncTask<Void, Void, Void>{
 
         @Override
         protected Void doInBackground(Void... arg0) {
@@ -187,9 +191,11 @@ public class EzitActivity extends ListActivity implements OnClickListener {
                 Connection con = DriverManager.getConnection(url, user, pw);
 
                 Statement st = con.createStatement();
-                //String sql = "INSERT INTO ezit VALUES (";
+
+                String sql = "INSERT INTO ezit VALUES ('', '"+name+"','"+date+"','"+enddate+"','"+desc+"');";
 
                 //final ResultSet rs = st.executeQuery(sql);
+                st.executeUpdate(sql);
                 //rs.next();
             }
             catch(Exception e) {
