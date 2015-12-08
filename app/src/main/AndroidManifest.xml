@@ -42,6 +42,24 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.example.neilvyn.ezitclean.MainActivity" />
         </activity>
+        <activity
+            android:name=".UserActivity"
+            android:label="@string/title_activity_user"
+            android:parentActivityName=".EzitActivity"
+            android:theme="@style/AppTheme.NoActionBar">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.example.neilvyn.ezitclean.EzitActivity" />
+        </activity>
+        <activity
+            android:name=".Win"
+            android:label="@string/title_activity_win"
+            android:parentActivityName=".DisplayEzitActivity"
+            android:theme="@style/AppTheme.NoActionBar">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.example.neilvyn.ezitclean.DisplayEzitActivity" />
+        </activity>
     </application>
 
 </manifest>

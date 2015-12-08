@@ -7,19 +7,19 @@ import java.sql.Statement;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.Date;
 import java.util.Locale;
 
-import android.app.Activity;
 import android.app.DatePickerDialog;
 import android.app.DatePickerDialog.OnDateSetListener;
 import android.app.ListActivity;
 import android.app.TimePickerDialog;
 import android.app.TimePickerDialog.OnTimeSetListener;
+import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.text.InputType;
+import android.util.Log;
 import android.view.Menu;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -52,6 +52,7 @@ public class EzitActivity extends ListActivity implements OnClickListener {
     public String desc;
     public String date;
     public String enddate;
+    public String listuser;
     /** Items entered by the user is stored in this ArrayList variable */
     ArrayList<String> list = new ArrayList<>();
 
@@ -93,7 +94,9 @@ public class EzitActivity extends ListActivity implements OnClickListener {
                 desc = desctemp.getText().toString();
                 date = eventDate.getText().toString() +" "+ eventTime.getText().toString();
                 enddate = eventEndDate.getText().toString() +" "+ eventEndTime.getText().toString();
-                new addNewEzit().execute();
+                //new addNewEzit().execute();
+                Intent intent = new Intent(EzitActivity.this, UserActivity.class);
+                startActivity(intent);
             }
         };
         fab.setOnClickListener(listener2);
@@ -181,7 +184,6 @@ public class EzitActivity extends ListActivity implements OnClickListener {
             eventEndTimePickerDialog.show();
         }
     }
-
     public class addNewEzit extends AsyncTask<Void, Void, Void>{
 
         @Override
@@ -189,14 +191,35 @@ public class EzitActivity extends ListActivity implements OnClickListener {
             try {
                 Class.forName("com.mysql.jdbc.Driver");
                 Connection con = DriverManager.getConnection(url, user, pw);
-
+                ArrayList<String> temp = new ArrayList<>();
                 Statement st = con.createStatement();
 
                 String sql = "INSERT INTO ezit VALUES ('', '"+name+"','"+date+"','"+enddate+"','"+desc+"');";
-
-                //final ResultSet rs = st.executeQuery(sql);
                 st.executeUpdate(sql);
-                //rs.next();
+                String sqlid = "SELECT idezit from ezit where nom='"+name+"'";
+                st.executeQuery(sqlid);
+                ResultSet r = st.executeQuery(sqlid);
+                String idezit="";
+                while(r.next()) {
+                    idezit = r.getString(1);
+                }
+                for (int i=0; i<list.size(); i++) {
+                    String sql2 = "INSERT INTO choice VALUES ('', '"+list.get(i)+"');";
+                    st.executeUpdate(sql2);
+                    String sql3 = "SELECT idchoice from choice WHERE nom='"+list.get(i)+"'";
+                    ResultSet rs = st.executeQuery(sql3);
+                    while(rs.next()){
+                        temp.add(rs.getString(1));
+                    }
+                    String sql4 = "INSERT INTO userezitchoice VALUES ('', "+idezit+","+temp.get(i)+");";
+                    st.executeUpdate(sql4);
+                }
+                String sqluser = "select * from user;";
+                ResultSet set =  st.executeQuery(sqluser);
+                while (set.next()){
+                    listuser += set.getString(2)+";";
+                }
+
             }
             catch(Exception e) {
                 e.printStackTrace();
